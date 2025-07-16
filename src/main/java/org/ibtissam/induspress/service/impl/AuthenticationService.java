@@ -1,0 +1,56 @@
+package org.ibtissam.induspress.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.ibtissam.induspress.dto.AuthenticationRequest;
+import org.ibtissam.induspress.dto.AuthenticationResponse;
+import org.ibtissam.induspress.dto.RegisterRequest;
+import org.ibtissam.induspress.model.Role;
+import org.ibtissam.induspress.model.User;
+import org.ibtissam.induspress.repository.UserRepository;
+import org.ibtissam.induspress.service.JwtService;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class AuthenticationService {
+
+    private final UserRepository appUserRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthenticationResponse register(RegisterRequest request) {
+        var user = User.builder()
+                .firstName(request.getFirstname())
+                .lastName(request.getLastname())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.EDITEUR)
+                .build();
+        appUserRepository.save(user);
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+    }
+
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+        var user = appUserRepository.findByEmail(request.getEmail())
+                .orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
+    }
+
+}
