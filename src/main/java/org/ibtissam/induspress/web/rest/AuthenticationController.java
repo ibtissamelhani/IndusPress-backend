@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.ibtissam.induspress.dto.AuthenticationRequest;
 import org.ibtissam.induspress.dto.AuthenticationResponse;
 import org.ibtissam.induspress.dto.RegisterRequest;
-import org.ibtissam.induspress.service.impl.AuthenticationService;
+import org.ibtissam.induspress.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;

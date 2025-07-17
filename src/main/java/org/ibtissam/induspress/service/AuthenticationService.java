@@ -1,4 +1,4 @@
-package org.ibtissam.induspress.service.impl;
+package org.ibtissam.induspress.service;
 
 import lombok.RequiredArgsConstructor;
 import org.ibtissam.induspress.dto.AuthenticationRequest;
@@ -7,7 +7,6 @@ import org.ibtissam.induspress.dto.RegisterRequest;
 import org.ibtissam.induspress.model.Role;
 import org.ibtissam.induspress.model.User;
 import org.ibtissam.induspress.repository.UserRepository;
-import org.ibtissam.induspress.service.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
