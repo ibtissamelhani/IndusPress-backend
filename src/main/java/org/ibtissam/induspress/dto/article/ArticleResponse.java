@@ -20,5 +20,6 @@ public class ArticleResponse {
     private LocalDateTime updatedAt;
     private String category;
     private String status;
-    private String author;
+    private String authorFirstName;
+    private String authorLastName;
 }
