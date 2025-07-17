@@ -1,9 +1,9 @@
 package org.ibtissam.induspress.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.AuthenticationRequest;
-import org.ibtissam.induspress.dto.AuthenticationResponse;
-import org.ibtissam.induspress.dto.RegisterRequest;
+import org.ibtissam.induspress.dto.auth.AuthenticationRequest;
+import org.ibtissam.induspress.dto.auth.AuthenticationResponse;
+import org.ibtissam.induspress.dto.auth.RegisterRequest;
 import org.ibtissam.induspress.model.Role;
 import org.ibtissam.induspress.model.User;
 import org.ibtissam.induspress.repository.UserRepository;

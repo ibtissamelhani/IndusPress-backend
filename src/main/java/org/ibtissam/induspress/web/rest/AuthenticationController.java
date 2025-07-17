@@ -2,9 +2,9 @@ package org.ibtissam.induspress.web.rest;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.AuthenticationRequest;
-import org.ibtissam.induspress.dto.AuthenticationResponse;
-import org.ibtissam.induspress.dto.RegisterRequest;
+import org.ibtissam.induspress.dto.auth.AuthenticationRequest;
+import org.ibtissam.induspress.dto.auth.AuthenticationResponse;
+import org.ibtissam.induspress.dto.auth.RegisterRequest;
 import org.ibtissam.induspress.service.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

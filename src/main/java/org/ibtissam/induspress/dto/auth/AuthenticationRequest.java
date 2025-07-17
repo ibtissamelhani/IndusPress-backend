@@ -1,4 +1,4 @@
-package org.ibtissam.induspress.dto;
+package org.ibtissam.induspress.dto.auth;
 
 import lombok.*;
 
@@ -7,11 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegisterRequest {
-
-    private String firstname;
-
-    private String lastname;
+public class AuthenticationRequest {
 
     private String email;
 

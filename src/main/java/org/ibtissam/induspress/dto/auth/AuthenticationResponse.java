@@ -1,4 +1,4 @@
-package org.ibtissam.induspress.dto;
+package org.ibtissam.induspress.dto.auth;
 
 
 import lombok.*;
