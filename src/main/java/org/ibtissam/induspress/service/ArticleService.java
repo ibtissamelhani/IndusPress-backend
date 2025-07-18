@@ -1,6 +1,7 @@
 package org.ibtissam.induspress.service;
 
 import lombok.RequiredArgsConstructor;
+import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
 import org.ibtissam.induspress.dto.article.ArticleMapper;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
@@ -15,6 +16,7 @@ import org.ibtissam.induspress.repository.ArticleRepository;
 import org.ibtissam.induspress.repository.CategoryRepository;
 import org.ibtissam.induspress.repository.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -75,10 +77,10 @@ public class ArticleService {
     }
 
 
-//    public Page<ArticleResponse> getValidatedPublicArticles() {
-//        return articleRepository.findByStatusOrderByCreatedAtDesc(Status.VALIDE)
-//                .map(mapper::toDto);
-//    }
+    public Page<ArticleResponse> getValidatedPublicArticles(Pageable pageable) {
+        return articleRepository.findByStatusOrderByCreatedAtDesc(Status.VALIDE, pageable)
+                .map(mapper::toDto);
+    }
 
 
 
@@ -87,5 +89,18 @@ public class ArticleService {
         String email = authentication.getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
+    }
+
+    public Page<ArticleResponse> findArticlesWithFilters(ArticleFilterDTO filterDTO, Pageable pageable) {
+
+        return articleRepository.findArticlesWithFilters(
+                filterDTO.getCategoryId(),
+                filterDTO.getAuthorFirstName(),
+                filterDTO.getAuthorLastName(),
+                filterDTO.getStatus(),
+                filterDTO.getStartDate(),
+                filterDTO.getEndDate(),
+                pageable
+        ).map(mapper::toDto);
     }
 }

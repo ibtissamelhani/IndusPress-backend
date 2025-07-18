@@ -4,15 +4,20 @@ package org.ibtissam.induspress.web.rest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
+import org.ibtissam.induspress.model.Article;
+import org.ibtissam.induspress.model.Status;
 import org.ibtissam.induspress.service.ArticleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -33,12 +38,20 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getById(id));
     }
 
-    @GetMapping
+    @GetMapping("/All")
     public ResponseEntity<Page<ArticleResponse>> getAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         return ResponseEntity.ok(articleService.getAll(PageRequest.of(page, size)));
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ArticleResponse>> getValidatedArticles(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return ResponseEntity.ok(articleService.getValidatedPublicArticles(PageRequest.of(page, size)));
     }
 
     @DeleteMapping("/{id}")
@@ -51,5 +64,15 @@ public class ArticleController {
     public ResponseEntity<ArticleResponse> update(@PathVariable UUID id,
                                                      @Valid @RequestBody ArticleRequest dto) {
         return ResponseEntity.ok(articleService.update(id, dto));
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<Page<ArticleResponse>> getArticlesWithFiltersPost(
+            @RequestBody ArticleFilterDTO filterDTO,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        Page<ArticleResponse> articles = articleService.findArticlesWithFilters(filterDTO,PageRequest.of(page, size));
+        return ResponseEntity.ok(articles);
     }
 }
