@@ -15,11 +15,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ArticleRepository extends JpaRepository<Article, UUID> {
-    List<Article> findByAuthor(User author);
-    List<Article> findByStatus(Status status);
-    List<Article> findByCategory(Category category);
+    Page<Article> findByAuthor(User author, Pageable pageable);
     Page<Article> findByStatusOrderByCreatedAtDesc(Status status, Pageable pageable);
-    List<Article> findByAuthorAndStatus(User author, Status status);
 
     @Query("SELECT a FROM Article a WHERE " +
             "(:categoryId IS NULL OR a.category.id = :categoryId) AND " +

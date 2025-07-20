@@ -44,6 +44,7 @@ public class ArticleService {
         Article article = mapper.toEntity(dto);
         article.setAuthor(currentUser);
         article.setCategory(category);
+        article.setStatus(Status.EN_ATTENTE_VALIDATION);
         article.setCreatedAt(LocalDateTime.now());
         article.setUpdatedAt(LocalDateTime.now());
 
@@ -56,6 +57,7 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article non trouvé"));
         mapper.updateEntityFromDto(dto, article);
         article.setUpdatedAt(LocalDateTime.now());
+        article.setStatus(Status.EN_ATTENTE_VALIDATION);
         return mapper.toDto(articleRepository.save(article));
     }
 
@@ -89,6 +91,12 @@ public class ArticleService {
         String email = authentication.getName();
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
+    }
+
+    public Page<ArticleResponse> getArticlesByUser(Pageable pageable) {
+        User user = getCurrentUser();
+        Page<Article> articlePage = articleRepository.findByAuthor(user, pageable);
+        return articlePage.map(mapper::toDto);
     }
 
     public Page<ArticleResponse> findArticlesWithFilters(ArticleFilterDTO filterDTO, Pageable pageable) {
