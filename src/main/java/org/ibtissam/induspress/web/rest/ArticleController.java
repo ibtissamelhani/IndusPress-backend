@@ -89,4 +89,13 @@ public class ArticleController {
     }
 
 
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ArticleResponse> updateStatus(
+            @PathVariable UUID id,
+            @RequestParam Status status) {
+
+        ArticleResponse updatedArticle = articleService.updateStatus(id, status);
+        return ResponseEntity.ok(updatedArticle);
+    }
+
 }

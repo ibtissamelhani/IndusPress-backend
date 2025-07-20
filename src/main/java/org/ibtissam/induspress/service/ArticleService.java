@@ -111,4 +111,15 @@ public class ArticleService {
                 pageable
         ).map(mapper::toDto);
     }
+
+    public ArticleResponse updateStatus(UUID id, Status status) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+
+        article.setStatus(status);
+        articleRepository.save(article);
+
+        return mapper.toDto(article);
+    }
+
 }
