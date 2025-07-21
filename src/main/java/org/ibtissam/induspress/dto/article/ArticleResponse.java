@@ -18,6 +18,7 @@ public class ArticleResponse {
     private String coverImage;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private UUID categoryId;
     private String category;
     private String status;
     private String authorFirstName;

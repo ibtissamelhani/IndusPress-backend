@@ -3,6 +3,7 @@ package org.ibtissam.induspress.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +33,9 @@ public class SecurityConfiguration {
                         authorizeHttpRequest -> {
                             authorizeHttpRequest.requestMatchers("/api/v1/auth/**")
                                     .permitAll();
+                            authorizeHttpRequest.requestMatchers(HttpMethod.GET, "/api/v1/articles").permitAll();
+                            authorizeHttpRequest.requestMatchers(HttpMethod.GET, "/api/v1/articles/{id}").permitAll();
+                            authorizeHttpRequest.requestMatchers(HttpMethod.GET, "/api/v1/categories").permitAll();
                             authorizeHttpRequest.anyRequest().authenticated();
                         }
                 ).sessionManagement(session -> session.sessionCreationPolicy(STATELESS))

@@ -4,7 +4,7 @@ package org.ibtissam.induspress.web.rest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
+import org.ibtissam.induspress.dto.article.ArticleFilterRequest;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
 import org.ibtissam.induspress.model.Article;
@@ -12,6 +12,8 @@ import org.ibtissam.induspress.model.Status;
 import org.ibtissam.induspress.service.ArticleService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,12 +69,32 @@ public class ArticleController {
     }
 
     @PostMapping("/filter")
-    public ResponseEntity<Page<ArticleResponse>> getArticlesWithFiltersPost(
-            @RequestBody ArticleFilterDTO filterDTO,
+    public Page<ArticleResponse> filterArticles(
+            @RequestBody ArticleFilterRequest filter,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "6") int size
+    ) {
+        return articleService.filterArticles(filter, PageRequest.of(page, size));
+    }
+
+    @GetMapping("/my-articles")
+    public ResponseEntity<Page<ArticleResponse>> getMyArticles(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        Page<ArticleResponse> articles = articleService.findArticlesWithFilters(filterDTO,PageRequest.of(page, size));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Page<ArticleResponse> articles = articleService.getArticlesByUser(pageable);
         return ResponseEntity.ok(articles);
     }
+
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<ArticleResponse> updateStatus(
+            @PathVariable UUID id,
+            @RequestParam Status status) {
+
+        ArticleResponse updatedArticle = articleService.updateStatus(id, status);
+        return ResponseEntity.ok(updatedArticle);
+    }
+
 }

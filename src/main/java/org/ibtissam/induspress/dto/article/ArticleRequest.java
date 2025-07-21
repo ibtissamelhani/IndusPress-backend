@@ -25,6 +25,4 @@ public class ArticleRequest {
 
     private String coverImage;
 
-    @NotNull(message = "Le statut est obligatoire")
-    private Status status;
 }

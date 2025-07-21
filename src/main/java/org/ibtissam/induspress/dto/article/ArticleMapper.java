@@ -11,6 +11,7 @@ public interface ArticleMapper {
     Article toEntity(ArticleRequest dto);
 
     @Mapping(target = "category", source = "category.name")
+    @Mapping(source = "category.id", target = "categoryId")
     @Mapping(source = "author.firstName", target = "authorFirstName")
     @Mapping(source = "author.lastName", target = "authorLastName")
     ArticleResponse toDto(Article entity);

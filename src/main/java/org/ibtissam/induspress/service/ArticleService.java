@@ -1,7 +1,7 @@
 package org.ibtissam.induspress.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
+import org.ibtissam.induspress.dto.article.ArticleFilterRequest;
 import org.ibtissam.induspress.dto.article.ArticleMapper;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
@@ -44,6 +44,7 @@ public class ArticleService {
         Article article = mapper.toEntity(dto);
         article.setAuthor(currentUser);
         article.setCategory(category);
+        article.setStatus(Status.EN_ATTENTE_VALIDATION);
         article.setCreatedAt(LocalDateTime.now());
         article.setUpdatedAt(LocalDateTime.now());
 
@@ -56,6 +57,7 @@ public class ArticleService {
                 .orElseThrow(() -> new ArticleNotFoundException("Article non trouvé"));
         mapper.updateEntityFromDto(dto, article);
         article.setUpdatedAt(LocalDateTime.now());
+        article.setStatus(Status.EN_ATTENTE_VALIDATION);
         return mapper.toDto(articleRepository.save(article));
     }
 
@@ -91,16 +93,24 @@ public class ArticleService {
                 .orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
     }
 
-    public Page<ArticleResponse> findArticlesWithFilters(ArticleFilterDTO filterDTO, Pageable pageable) {
-
-        return articleRepository.findArticlesWithFilters(
-                filterDTO.getCategoryId(),
-                filterDTO.getAuthorFirstName(),
-                filterDTO.getAuthorLastName(),
-                filterDTO.getStatus(),
-                filterDTO.getStartDate(),
-                filterDTO.getEndDate(),
-                pageable
-        ).map(mapper::toDto);
+    public Page<ArticleResponse> getArticlesByUser(Pageable pageable) {
+        User user = getCurrentUser();
+        Page<Article> articlePage = articleRepository.findByAuthor(user, pageable);
+        return articlePage.map(mapper::toDto);
     }
+
+    public Page<ArticleResponse> filterArticles(ArticleFilterRequest filter, Pageable pageable) {
+        return articleRepository.findByFilters(filter, pageable);
+    }
+
+    public ArticleResponse updateStatus(UUID id, Status status) {
+        Article article = articleRepository.findById(id)
+                .orElseThrow(() -> new ArticleNotFoundException("Article not found"));
+
+        article.setStatus(status);
+        articleRepository.save(article);
+
+        return mapper.toDto(article);
+    }
+
 }
