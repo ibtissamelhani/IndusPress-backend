@@ -4,7 +4,7 @@ package org.ibtissam.induspress.web.rest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
+import org.ibtissam.induspress.dto.article.ArticleFilterRequest;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
 import org.ibtissam.induspress.model.Article;
@@ -69,13 +69,12 @@ public class ArticleController {
     }
 
     @PostMapping("/filter")
-    public ResponseEntity<Page<ArticleResponse>> getArticlesWithFiltersPost(
-            @RequestBody ArticleFilterDTO filterDTO,
+    public Page<ArticleResponse> filterArticles(
+            @RequestBody ArticleFilterRequest filter,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "6") int size
     ) {
-        Page<ArticleResponse> articles = articleService.findArticlesWithFilters(filterDTO,PageRequest.of(page, size));
-        return ResponseEntity.ok(articles);
+        return articleService.filterArticles(filter, PageRequest.of(page, size));
     }
 
     @GetMapping("/my-articles")

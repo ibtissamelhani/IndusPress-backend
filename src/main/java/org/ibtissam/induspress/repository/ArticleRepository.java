@@ -14,24 +14,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface ArticleRepository extends JpaRepository<Article, UUID> {
+public interface ArticleRepository extends JpaRepository<Article, UUID> , SearchArticleRepository{
     Page<Article> findByAuthor(User author, Pageable pageable);
     Page<Article> findByStatusOrderByCreatedAtDesc(Status status, Pageable pageable);
 
-    @Query("SELECT a FROM Article a WHERE " +
-            "(:categoryId IS NULL OR a.category.id = :categoryId) AND " +
-            "(:authorFirstName IS NULL OR LOWER(a.author.firstName) LIKE LOWER(CONCAT('%', :authorFirstName, '%'))) AND " +
-            "(:authorLastName IS NULL OR LOWER(a.author.lastName) LIKE LOWER(CONCAT('%', :authorLastName, '%'))) AND " +
-            "(:status IS NULL OR a.status = :status) AND " +
-            "(:startDate IS NULL OR a.createdAt >= :startDate) AND " +
-            "(:endDate IS NULL OR a.createdAt <= :endDate)")
-    Page<Article> findArticlesWithFilters(
-            @Param("categoryId") UUID categoryId,
-            @Param("authorFirstName") String authorFirstName,
-            @Param("authorLastName") String authorLastName,
-            @Param("status") Status status,
-            @Param("startDate") LocalDateTime startDate,
-            @Param("endDate") LocalDateTime endDate,
-            Pageable pageable
-    );
 }

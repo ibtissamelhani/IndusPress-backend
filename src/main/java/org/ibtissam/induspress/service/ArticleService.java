@@ -1,7 +1,7 @@
 package org.ibtissam.induspress.service;
 
 import lombok.RequiredArgsConstructor;
-import org.ibtissam.induspress.dto.article.ArticleFilterDTO;
+import org.ibtissam.induspress.dto.article.ArticleFilterRequest;
 import org.ibtissam.induspress.dto.article.ArticleMapper;
 import org.ibtissam.induspress.dto.article.ArticleRequest;
 import org.ibtissam.induspress.dto.article.ArticleResponse;
@@ -99,17 +99,8 @@ public class ArticleService {
         return articlePage.map(mapper::toDto);
     }
 
-    public Page<ArticleResponse> findArticlesWithFilters(ArticleFilterDTO filterDTO, Pageable pageable) {
-
-        return articleRepository.findArticlesWithFilters(
-                filterDTO.getCategoryId(),
-                filterDTO.getAuthorFirstName(),
-                filterDTO.getAuthorLastName(),
-                filterDTO.getStatus(),
-                filterDTO.getStartDate(),
-                filterDTO.getEndDate(),
-                pageable
-        ).map(mapper::toDto);
+    public Page<ArticleResponse> filterArticles(ArticleFilterRequest filter, Pageable pageable) {
+        return articleRepository.findByFilters(filter, pageable);
     }
 
     public ArticleResponse updateStatus(UUID id, Status status) {
