@@ -45,7 +45,7 @@ public class ArticleController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return ResponseEntity.ok(articleService.getAll(PageRequest.of(page, size)));
+        return ResponseEntity.ok(articleService.getAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"))));
     }
 
     @GetMapping
