@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.ibtissam.induspress.dto.auth.AuthenticationRequest;
 import org.ibtissam.induspress.dto.auth.AuthenticationResponse;
 import org.ibtissam.induspress.dto.auth.RegisterRequest;
+import org.ibtissam.induspress.exception.UserNotFoundException;
 import org.ibtissam.induspress.model.Role;
 import org.ibtissam.induspress.model.User;
 import org.ibtissam.induspress.repository.UserRepository;
@@ -45,7 +46,7 @@ public class AuthenticationService {
                 )
         );
         var user = appUserRepository.findByEmail(request.getEmail())
-                .orElseThrow();
+                .orElseThrow(() -> new UserNotFoundException("Utilisateur non trouvé"));
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
